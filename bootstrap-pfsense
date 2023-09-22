@@ -1,0 +1,35 @@
+#!/bin/sh
+
+poudriere jail -c -j 140-pfsense -v 14.0-BETA2 -a amd64
+
+poudriere ports -c -m git+https -U https://github.com/pfsense/FreeBSD-ports.git -B devel -p pfsense
+poudriere ports -c -m git+https -U https://github.com/crowdsecurity/packaging-freebsd.git -B main -p freebsd_crowdsec
+poudriere ports -c -m git+https -U https://github.com/crowdsecurity/pfSense-pkg-crowdsec.git -B main -p pfsense_crowdsec
+
+cat <<EOT >/root/port_pfsense
+security/crowdsec
+security/crowdsec-firewall-bouncer
+security/crowdsec-blocklist-mirror
+security/pfSense-pkg-crowdsec
+EOT
+
+cat <<EOT >>/root/port_pfsense-devel
+devel/git
+shells/bash
+shells/fish
+misc/mc
+editors/vim
+textproc/bat
+textproc/the_silver_searcher
+devel/gmake
+ftp/wget
+ftp/curl
+sysutils/htop
+sysutils/tmux
+sysutils/zellij
+ports-mgmt/portlint
+EOT
+
+exit 0
+
+poudriere bulk -J 4 -j 140-pfsense -p pfsense -O freebsd_crowdsec -O pfsense_crowdsec -f /root/port_pfsense
