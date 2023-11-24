@@ -11,6 +11,26 @@ security/crowdsec-firewall-bouncer
 security/crowdsec-blocklist-mirror
 EOT
 
+cat <<EOT >>/root/port_opnsense-devel
+devel/git
+shells/bash
+shells/fish
+misc/mc
+editors/vim
+textproc/the_silver_searcher
+devel/gmake
+ftp/wget
+ftp/curl
+sysutils/htop
+sysutils/tmux
+ports-mgmt/portlint
+EOT
+
+cat <<EOT >>/root/port_opnsense-rust
+textproc/bat
+sysutils/zellij
+EOT
+
 exit 0
 
 poudriere bulk -J 4 -j 132-opnsense -p opnsense -O freebsd_crowdsec -f /root/port_opnsense
